@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de equipos</title>
+    
+    <!-- Agrega los enlaces a los archivos CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/media.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+</head>
+<body>
+    <!-- Contenedor principal con Bootstrap -->
+    <div class="container-oficial">
+    <div class="container mt-5 animate__animated animate__fadeIn">
+        <img src="Logo.png">
+        <h1 class="display-4">Laboratorio B5</h1>
+  
+    </div>
+
+    <!-- Modal para agregar datos -->
+    <div class="modal fade animate__fadeInUp" id="agregarDatosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Datos de PC</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de datos de PC -->
+                    <form id="formularioDatos">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="pc" class="form-label">Nombre de la PC</label>
+                                <input type="text" class="form-control" id="pc">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="procesador" class="form-label">Procesador</label>
+                                <input type="text" class="form-control" id="procesador">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="memoriaRAM" class="form-label">Cantidad de RAM</label>
+                                <input type="text" class="form-control" id="memoriaRAM">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sistemaOperativo" class="form-label">Sistema Operativo</label>
+                                <input type="text" class="form-control" id="sistemaOperativo">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="servidor" class="form-label">Servidor</label>
+                                <input type="text" class="form-control" id="servidor">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="softwareInstalado" class="form-label">Software Instalado</label>
+                                <input type="text" class="form-control" id="softwareInstalado">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="actualizaciones" class="form-label">Actualizaciones</label>
+                                <input type="text" class="form-control" id="actualizaciones" rows="3"></input>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="usuarios" class="form-label">Usuarios</label>
+                                <input type="text" class="form-control" id="usuarios">
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccionip" class="form-label">Direccion IP</label>
+                                <input type="text" class="form-control" id="direccionip">
+                            </div>
+                            <div class="mb-3">
+                                <label for="observacion" class="form-label">Observación</label>
+                                <textarea class="form-control" id="observacion" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="guardarDatosBtn" data-bs-dismiss="modal" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla para mostrar datos -->
+    <div class="container mt-3">    
+        <h2>Datos de Equipos</h2>
+        <button type="button" class="btn btn-primary  " data-bs-toggle="modal" data-bs-target="#agregarDatosModal">
+            Agregar Datos <i class="bi bi-plus-circle-fill"></i>
+        </button>
+        <button type="button" class="btn btn-success" id="generarInformeBtn">
+            Generar informe <i class="bi bi-info-circle-fill"></i>
+        </button>
+        <input type="text" id="busqueda" class="busqueda form-control" placeholder="Buscar...">
+        <div class="table-responsive">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>PC</th>
+                    <th>Procesador</th>
+                    <th>Memoria RAM</th>
+                    <th>Sistema Operativo</th>
+                    <th>Servidor</th>
+                    <th>Software Instalado</th>
+                    <th>Actualizaciones</th>
+                    <th>Usuarios</th>
+                    <th>Direccion IP</th>
+                    <th>Acciones</th> <!-- Agrega una columna para las acciones -->
+                </tr>
+            </thead>
+            <tbody id="tablaDatos">
+                <!-- Los datos se agregarán aquí desde JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <!-- Modal para editar datos -->
+    <div class="modal fade" id="editarDatosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Datos de PC</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de datos de PC para edición -->
+                    <form id="formularioEditarDatos">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="pc_editar" class="form-label">Nombre de la PC</label>
+                                <input type="text" class="form-control" id="pc_editar">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="procesador_editar" class="form-label">Procesador</label>
+                                <input type="text" class="form-control" id="procesador_editar">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="memoriaRAM_editar" class="form-label">Memoria RAM</label>
+                                <input type="text" class="form-control" id="memoriaRAM_editar">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sistemaOperativo_editar" class="form-label">Sistema Operativo</label>
+                                <input type="text" class="form-control" id="sistemaOperativo_editar">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="servidor_editar" class="form-label">Servidor</label>
+                                <input type="text" class="form-control" id="servidor_editar">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="softwareInstalado_editar" class="form-label">Software Instalado</label>
+                                <input type="text" class="form-control" id="softwareInstalado_editar">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="actualizaciones_editar" class="form-label">Actualizaciones</label>
+                                <input type="text" class="form-control" id="actualizaciones_editar" rows="3"></textare>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="usuarios_editar" class="form-label">Usuarios</label>
+                                <input type="text" class="form-control" id="usuarios_editar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccionip_editar" class="form-label">Direccion IP</label>
+                                <input type="text" class="form-control" id="direccionip_editar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="observacion_editar" class="form-label">Observación</label>
+                                <textarea class="form-control" id="observacion_editar" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="guardarEdicionBtn" data-bs-dismiss="modal" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Agrega los enlaces a los archivos JavaScript de Firebase, Firestore y Bootstrap -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.all.min.js"></script>
+    <script src="mi_script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+    
+    <script>
+        // Agrega un evento de clic al botón "Generar informe"
+        document.getElementById('generarInformeBtn').addEventListener('click', function () {
+            var doc = new jsPDF();
+            // Obtén los valores de los campos del formulario
+            var pc = document.getElementById('pc_editar').value;
+            var procesador = document.getElementById('procesador_editar').value;
+            var memoriaRAM = document.getElementById('memoriaRAM_editar').value;
+            var sistemaOperativo = document.getElementById('sistemaOperativo_editar').value;
+            var servidor = document.getElementById('servidor_editar').value;
+            var softwareInstalado = document.getElementById('softwareInstalado_editar').value;
+        
+            // Agrega los datos al PDF
+            doc.text(85, 15, "Informe de Equipos");
+            doc.text(20, 30, "Nombre de la PC: " + pc);
+            doc.text(20, 40, "Procesador: " + procesador);
+            doc.text(20, 50, "Memoria RAM: " + memoriaRAM);
+            doc.text(20, 60, "Sistema Operativo: " + sistemaOperativo);
+            doc.text(20, 70, "Servidor: " + servidor);
+            doc.text(20, 80, "Software Instalado: " + softwareInstalado);
+        
+            // Guarda el PDF
+            doc.save("InformeEquipos.pdf");
+        });
+    </script>
+
+</body>
+</html>

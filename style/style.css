@@ -1,0 +1,154 @@
+/* Estilos generales */
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.container-oficial {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-top: 20px;
+    border-radius: 30px;
+}
+
+.display-4{
+    justify-content: center;
+    text-align: center;
+}
+
+.container img{
+    max-width: 100px; /* Ajusta el ancho máximo de la imagen según tus necesidades */
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+    display: block; /* Hace que la imagen sea un bloque y, por lo tanto, centrada */
+    margin-bottom: 20px; /* Espaciado inferior para separarla del texto */
+}
+
+/* Estilos para el botón "Agregar Datos" */
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para la tabla de datos */
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.table {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.table thead {
+    background-color: #343a40;
+    color: #fff;
+}
+
+/* Estilos para los botones de acciones en la tabla */
+.table .btn {
+    padding: 4px 8px;
+    margin: 2px;
+    font-size: 1rem;
+}
+
+/* Estilos para los modales */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    background-color: #f7f7f7;
+    color: #000;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-body {
+    padding: 8px;
+}
+
+.modal-footer {
+    background-color: #f7f7f7;
+    border-radius: 0 0 10px 10px;
+    text-align: center;
+}
+
+/* Estilos para los botones dentro de los modales */
+.modal-footer button {
+    margin: 0 10px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    align-items: center;
+}
+
+.modal-footer button.primary {
+    background-color: #007bff;
+    color: #fff;
+    justify-content: center;
+}
+
+.modal-footer button.primary:hover {
+    background-color: #0056b3;
+}
+
+.modal-footer button.secondary {
+    background-color: #ccc;
+    color: #333;
+}
+
+.modal-footer button.secondary:hover {
+    background-color: #999;
+}
+
+/* Estilos planos (flat) para los formularios dentro de los modales */
+.modal-body input[type="text"],
+.modal-body textarea {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3; /* Borra el borde redondeado */
+    background-color: transparent; /* Fondo transparente */
+    box-shadow: none; /* Sin sombra */
+}
+
+/* Estilos para resaltar el input enfocado */
+.modal-body input:focus,
+.modal-body textarea:focus {
+    border-color: #057414;
+    box-shadow: 0 0 5px rgba(0, 255, 13, 0.5);
+}
+
+.icon{
+    color: #ffff;
+}
+
+.busqueda{
+    margin-top: 10px;
+}

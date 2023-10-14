@@ -1,0 +1,19 @@
+@media (max-width: 768px) {
+    .container-oficial {
+        padding: 10px;
+    }
+    .container img {
+        max-width: 80px;
+    }
+    .btn-primary {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .modal-body input[type="text"],
+    .modal-body textarea {
+        padding: 4px;
+    }
+    .modal-footer button {
+        padding: 6px 12px;
+    }
+}
