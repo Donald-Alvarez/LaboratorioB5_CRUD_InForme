@@ -92,13 +92,15 @@
     </div>
 
     <!-- Tabla para mostrar datos -->
-    <div class="container mt-3">    
+    <div class="container mt-3"> 
+           
         <h2>Datos de Equipos</h2>
-        <button type="button" class="btn btn-primary  " data-bs-toggle="modal" data-bs-target="#agregarDatosModal">
+        <button type="button" class="btn btn-primary  " data-bs-toggle="modal" data-bs-target="#agregarDatosModal" >
             Agregar Datos <i class="bi bi-plus-circle-fill"></i>
         </button>
-        <button type="button" class="btn btn-success" id="generarInformeBtn">
+        <button type="button" class="btn btn-success" id="generarInformeBtnFiltrado">
             Generar informe <i class="bi bi-info-circle-fill"></i>
+
         </button>
         <input type="text" id="busqueda" class="busqueda form-control" placeholder="Buscar...">
         <div class="table-responsive">
@@ -114,6 +116,7 @@
                     <th>Actualizaciones</th>
                     <th>Usuarios</th>
                     <th>Direccion IP</th>
+                    <th>Observaciones</th>
                     <th>Acciones</th> <!-- Agrega una columna para las acciones -->
                 </tr>
             </thead>
@@ -205,30 +208,128 @@
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
     
     <script>
-        // Agrega un evento de clic al botón "Generar informe"
-        document.getElementById('generarInformeBtn').addEventListener('click', function () {
+        document.getElementById('generarInformeBtnFiltrado').addEventListener('click', function () {
             var doc = new jsPDF();
-            // Obtén los valores de los campos del formulario
-            var pc = document.getElementById('pc_editar').value;
-            var procesador = document.getElementById('procesador_editar').value;
-            var memoriaRAM = document.getElementById('memoriaRAM_editar').value;
-            var sistemaOperativo = document.getElementById('sistemaOperativo_editar').value;
-            var servidor = document.getElementById('servidor_editar').value;
-            var softwareInstalado = document.getElementById('softwareInstalado_editar').value;
+            var filasFiltradas = document.querySelectorAll('#tablaDatos tr');
+            var filasVisibles = Array.from(filasFiltradas).filter(function (fila) {
+                return fila.style.display !== 'none';
+            });
         
-            // Agrega los datos al PDF
-            doc.text(85, 15, "Informe de Equipos");
-            doc.text(20, 30, "Nombre de la PC: " + pc);
-            doc.text(20, 40, "Procesador: " + procesador);
-            doc.text(20, 50, "Memoria RAM: " + memoriaRAM);
-            doc.text(20, 60, "Sistema Operativo: " + sistemaOperativo);
-            doc.text(20, 70, "Servidor: " + servidor);
-            doc.text(20, 80, "Software Instalado: " + softwareInstalado);
+            // Verifica si hay filas filtradas
+            if (filasVisibles.length === 0) {
+                Swal.fire("Sin resultados", "No hay resultados para generar informes.", "info");
+                return;
+            }
         
-            // Guarda el PDF
-            doc.save("InformeEquipos.pdf");
-        });
-    </script>
+            // Logo
+            var logo = new Image();
+            logo.src = 'Logo.png';
+        
+            logo.onload = function () {
+                 var fontSize = 12;
+                    for (var i = 0; i < filasVisibles.length; i++) {
+                        if (i > 0) {
+                            doc.addPage(); // Agregar una página nueva para cada PC
+                        }
 
+                        // Configuración de tamaño de fuente y posición iniciales
+                        doc.setFontSize(fontSize);
+                        var yPosition = 20; // Reiniciar la posición en la nueva página
+
+        
+                    var row = filasVisibles[i];
+                    var cells = row.getElementsByTagName('td');
+                    var pc = cells[0].textContent;
+                    var procesador = cells[1].textContent;
+                    var memoriaRAM = cells[2].textContent;
+                    var sistemaOperativo = cells[3].textContent;
+                    var servidor = cells[4].textContent;
+                    var softwareInstalado = cells[5].textContent;
+                    var direccionip = cells[8].textContent;
+                    var observacion = cells[9].textContent;
+        
+                    // Configuración de posición y estilo de los datos
+                    var yPosition = 20; // Reiniciar la posición en la nueva página
+                    var textStartX = 10;
+                    var textWidth = 85;
+                    var textX1 = textStartX;
+                    var textX2 = textStartX + textWidth;
+        
+                    // Agrega la fecha y la hora al documento
+                    var dateString = "Fecha: " + new Date().toLocaleDateString();
+                    var hours = new Date().getHours();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    var minutes = new Date().getMinutes();
+                    var timeString = "Hora: " + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm;
+        
+                    // Agrega el logo junto a la fecha y la hora
+                    doc.addImage(logo, 'PNG', 10,10, yPosition, 25, 30);
+                    doc.text(dateString, 170, yPosition + 5);
+                    doc.text(timeString, 170, yPosition + 10);
+        
+                    // Agrega el título centrado
+                    yPosition += 40;
+                    doc.setFontType("bold");
+                    doc.text("Informe de Equipos", 10, yPosition, { align: "center" });
+                    yPosition += 10;
+                    doc.setFontType("normal")
+        
+                    // Agrega los datos de la PC con formato
+                    doc.setFontSize(12);
+                    doc.text("Nombre de la PC:", textX1, yPosition );
+                    doc.text(pc, textX2, yPosition, { maxWidth: textWidth });
+                    yPosition += 10;
+        
+                    doc.text("Procesador:", textX1, yPosition);
+                    doc.text(procesador, textX2, yPosition, { maxWidth: textWidth } );
+                    yPosition += 10;
+        
+                    doc.text("Memoria RAM:", textX1, yPosition);
+                    doc.text(memoriaRAM, textX2, yPosition, { maxWidth: textWidth });
+                    yPosition += 10;
+        
+                    doc.text("Sistema Operativo:", textX1, yPosition);
+                    doc.text(sistemaOperativo, textX2, yPosition, { maxWidth: textWidth });
+                    yPosition += 10;
+        
+                    doc.text("Servidor:", textX1, yPosition);
+                    doc.text(servidor, textX2, yPosition, { maxWidth: textWidth });
+                    yPosition += 10;
+        
+                    doc.text("Software Instalado:", textX1, yPosition);
+                    doc.text(softwareInstalado, textX2, yPosition, { maxWidth: textWidth });
+                    yPosition += 10;
+        
+                    doc.text("Dirección IP:", textX1, yPosition);
+                    doc.text(direccionip, textX2, yPosition, { maxWidth: textWidth });
+                    yPosition += 10;
+        
+                    doc.text("Observación:", textX1, yPosition);
+                    var observacionLines = doc.splitTextToSize(observacion, textWidth);
+                    doc.text(observacionLines, textX2, yPosition);
+                    yPosition += observacionLines.length * 10;
+                }
+        
+                // Guarda el PDF
+                doc.save("InformeEquiposFiltrado.pdf");
+        
+                // Muestra un SweetAlert con animación y un ícono de éxito
+                Swal.fire({
+                    title: "Informe generado con éxito",
+                    icon: "success",
+                    showClass: {
+                        popup: 'animate__animated animate__fadeIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOut'
+                    },
+                    timer: 2000, // Duración en milisegundos (2 segundos)
+                    showConfirmButton: false, // No mostrar el botón "OK"
+                });
+            };
+        });
+        </script>
 </body>
 </html>

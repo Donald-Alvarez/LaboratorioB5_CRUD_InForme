@@ -53,6 +53,7 @@ document.getElementById('servidor').value = '';
 document.getElementById('softwareInstalado').value = '';
 document.getElementById('actualizaciones').value = '';
 document.getElementById('usuarios').value = '';
+document.getElementById('direccionip').value = '';
 })
 .catch(function (error) {
 Swal.fire("Error", "Error al agregar documento: " + error, "error");
@@ -75,7 +76,8 @@ db.collection("equipos").onSnapshot((querySnapshot) => {
             <td>${doc.data().softwareInstalado}</td>
             <td>${doc.data().actualizaciones}</td>
             <td>${doc.data().usuarios}</td>
-            <td>${doc.data().direccionip}</td> <!-- Agrega la dirección IP -->
+            <td>${doc.data().direccionip}</td> 
+            <td>${doc.data().observacion}</td> 
             <td>
                 <button class="btn btn-danger" onclick="borrar('${doc.id}')"><i class="bi bi-trash3-fill"></i></button>
                 <button class="btn btn-warning" onclick="editar('${doc.id}', '${doc.data().pc}', 

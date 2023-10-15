@@ -152,3 +152,9 @@ h2 {
 .busqueda{
     margin-top: 10px;
 }
+
+/* Ocultar la columna de Observaciones */
+.table th:nth-child(10),
+.table td:nth-child(10) {
+    display: none;
+}
