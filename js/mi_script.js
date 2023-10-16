@@ -1,9 +1,9 @@
 
 // Autenticación de Firebase
 firebase.initializeApp({
-    apiKey: "Tu-API-Key",
-    authDomain: "Tu-Dominio.firebaseapp.com",
-    projectId: "laboratoriob5-49564",
+    apiKey: "AIzaSyDrLMma3AOYbDyiSw6pGUWbG-vrW7eEkSI",
+    authDomain: "laboratoriob5v2.firebaseapp.com",
+    projectId: "laboratoriob5v2",
 });
 
 // Inicializar Firestore

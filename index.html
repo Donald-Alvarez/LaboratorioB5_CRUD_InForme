@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/media.css">
+    <link rel="icon" type="image/jpg" href="/img/upc.png"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 </head>
@@ -17,7 +18,7 @@
     <!-- Contenedor principal con Bootstrap -->
     <div class="container-oficial">
     <div class="container mt-5 animate__animated animate__fadeIn">
-        <img src="Logo.png">
+        <img src="img/Logo.png">
         <h1 class="display-4">Laboratorio B5</h1>
   
     </div>
@@ -203,7 +204,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.all.min.js"></script>
-    <script src="mi_script.js"></script>
+    <script src="js/mi_script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
     
@@ -223,7 +224,7 @@
         
             // Logo
             var logo = new Image();
-            logo.src = 'Logo.png';
+            logo.src = './img/Logo.png';
         
             logo.onload = function () {
                  var fontSize = 12;
@@ -268,11 +269,17 @@
                     doc.addImage(logo, 'PNG', 10,10, yPosition, 25, 30);
                     doc.text(dateString, 170, yPosition + 5);
                     doc.text(timeString, 170, yPosition + 10);
-        
-                    // Agrega el título centrado
+
                     yPosition += 40;
                     doc.setFontType("bold");
-                    doc.text("Informe de Equipos", 10, yPosition, { align: "center" });
+                    doc.text("Laboratorio B5", 10, yPosition, { align: "center" });
+                    yPosition += 10;
+                    doc.setFontType("normal")
+        
+                    // Agrega el título centrado
+                    yPosition += 10;
+                    doc.setFontType("bold");
+                    doc.text("Informe detallado de:", 10, yPosition, { align: "center" });
                     yPosition += 10;
                     doc.setFontType("normal")
         
@@ -303,8 +310,9 @@
                     yPosition += 10;
         
                     doc.text("Dirección IP:", textX1, yPosition);
-                    doc.text(direccionip, textX2, yPosition, { maxWidth: textWidth });
-                    yPosition += 10;
+                    var direccionip = doc.splitTextToSize(direccionip, textWidth);
+                    doc.text(direccionip, textX2, yPosition);
+                    yPosition += direccionip.length * 8;
         
                     doc.text("Observación:", textX1, yPosition);
                     var observacionLines = doc.splitTextToSize(observacion, textWidth);
