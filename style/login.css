@@ -1,0 +1,91 @@
+/* Estilos para el contenedor principal */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('/img/fondo.jpg') center/cover no-repeat;
+}
+
+/* Estilos para el "box" que contiene la imagen y el formulario */
+.box {
+    background-color: var(--color-secundary);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 500px;
+}
+
+/* Estilos para la imagen del logo */
+.login-logo {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+/* Estilos para los elementos del formulario */
+.login-form-control {
+    margin: 5px;
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: var(--color-secundary);
+    opacity: 1;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-secundary);
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-link {
+    text-decoration: none;
+    color: var(--color-primary);
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.Registro-Text {
+    text-align: left;
+    font: 900 20px/20px Montserrat;
+    color: var(--color-primary);
+}
+
+/* Estilos para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    .box {
+        padding: 10px;
+        max-width: 100%;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .login-logo {
+        width: 60%;
+        max-width: 150px;
+        margin-bottom: 10px;
+    }
+
+    .Registro-Text {
+        font-size: 14px;
+    }
+
+    .login-form-control {
+        padding: 8px;
+        font-size: 14px;
+        max-width: 100%;
+    }
+}
+
+:root {
+    --color-primary: #008DD8;
+    --color-secundary: #ffff;
+}

@@ -1,4 +1,3 @@
-
 // Autenticación de Firebase
 firebase.initializeApp({
     apiKey: "AIzaSyDrLMma3AOYbDyiSw6pGUWbG-vrW7eEkSI",
@@ -36,59 +35,60 @@ function guardar() {
         usuarios: usuarios,
         direccionip: direccionip // Agregar la dirección IP
     })
-.then(function (docRef) {
-console.log("Document written with ID: ", docRef.id);
-Swal.fire({
-    title: "Registro guardado",
-    icon: "success", // Ícono de éxito
-    timer: 2000, // Duración en milisegundos (2 segundos)
-    showConfirmButton: false // No mostrar el botón "OK"
-});
-document.getElementById('pc').value = '';
-document.getElementById('observacion').value = '';
-document.getElementById('procesador').value = '';
-document.getElementById('memoriaRAM').value = '';
-document.getElementById('sistemaOperativo').value = '';
-document.getElementById('servidor').value = '';
-document.getElementById('softwareInstalado').value = '';
-document.getElementById('actualizaciones').value = '';
-document.getElementById('usuarios').value = '';
-document.getElementById('direccionip').value = '';
-})
-.catch(function (error) {
-Swal.fire("Error", "Error al agregar documento: " + error, "error");
-});
+    .then(function (docRef) {
+        console.log("Document written with ID: ", docRef.id);
+        Swal.fire({
+            title: "Registro guardado",
+            icon: "success", // Ícono de éxito
+            timer: 2000, // Duración en milisegundos (2 segundos)
+            showConfirmButton: false // No mostrar el botón "OK"
+        });
+        document.getElementById('pc').value = '';
+        document.getElementById('observacion').value = '';
+        document.getElementById('procesador').value = '';
+        document.getElementById('memoriaRAM').value = '';
+        document.getElementById('sistemaOperativo').value = '';
+        document.getElementById('servidor').value = '';
+        document.getElementById('softwareInstalado').value = '';
+        document.getElementById('actualizaciones').value = '';
+        document.getElementById('usuarios').value = '';
+        document.getElementById('direccionip').value = '';
+    })
+    .catch(function (error) {
+        Swal.fire("Error", "Error al agregar documento: " + error, "error");
+    });
 }
-
 
 // LEER LOS DATOS DE FIRESTORE
 var tablaDatos = document.getElementById('tablaDatos');
-db.collection("equipos").onSnapshot((querySnapshot) => {
-    tablaDatos.innerHTML = '';
-    querySnapshot.forEach((doc) => {
-        tablaDatos.innerHTML += `
-        <tr>
-            <td>${doc.data().pc}</td>
-            <td>${doc.data().procesador}</td>
-            <td>${doc.data().memoriaRAM}</td>
-            <td>${doc.data().sistemaOperativo}</td>
-            <td>${doc.data().servidor}</td>
-            <td>${doc.data().softwareInstalado}</td>
-            <td>${doc.data().actualizaciones}</td>
-            <td>${doc.data().usuarios}</td>
-            <td>${doc.data().direccionip}</td> 
-            <td>${doc.data().observacion}</td> 
-            <td>
-                <button class="btn btn-danger" onclick="borrar('${doc.id}')"><i class="bi bi-trash3-fill"></i></button>
-                <button class="btn btn-warning" onclick="editar('${doc.id}', '${doc.data().pc}', 
-                '${doc.data().observacion}', '${doc.data().procesador}', '${doc.data().memoriaRAM}',
-                 '${doc.data().sistemaOperativo}', '${doc.data().servidor}', '${doc.data().softwareInstalado}',
-                  '${doc.data().actualizaciones}', '${doc.data().usuarios}', '${doc.data().direccionip}')"><i class="icon bi bi-pencil-square"></i></button>
-            </td>
-        </tr>
-        `;
+db.collection("equipos")
+    .orderBy('pc') // Ordenar por el campo 'pc' de forma ascendente
+    .onSnapshot((querySnapshot) => {
+        tablaDatos.innerHTML = '';
+        querySnapshot.forEach((doc) => {
+            tablaDatos.innerHTML += `
+            <tr>
+                <td>${doc.data().pc}</td>
+                <td>${doc.data().procesador}</td>
+                <td>${doc.data().memoriaRAM}</td>
+                <td>${doc.data().sistemaOperativo}</td>
+                <td>${doc.data().servidor}</td>
+                <td>${doc.data().softwareInstalado}</td>
+                <td>${doc.data().actualizaciones}</td>
+                <td>${doc.data().usuarios}</td>
+                <td>${doc.data().direccionip}</td> 
+                <td>${doc.data().observacion}</td> 
+                <td>
+                    <button class="btn btn-danger" onclick="borrar('${doc.id}')"><i class="bi bi-trash3-fill"></i></button>
+                    <button class="btn btn-warning" onclick="editar('${doc.id}', '${doc.data().pc}', 
+                    '${doc.data().observacion}', '${doc.data().procesador}', '${doc.data().memoriaRAM}',
+                     '${doc.data().sistemaOperativo}', '${doc.data().servidor}', '${doc.data().softwareInstalado}',
+                      '${doc.data().actualizaciones}', '${doc.data().usuarios}', '${doc.data().direccionip}')"><i class="icon bi bi-pencil-square"></i></button>
+                </td>
+            </tr>
+            `;
+        });
     });
-});
 
 // BORRAR LOS DATOS DE FIRESTORE
 function borrar(id) {
@@ -167,7 +167,7 @@ function editar(id, pc, observacion, procesador, memoriaRAM, sistemaOperativo, s
                 Swal.fire("Error", "Error al actualizar: " + error, "error");
             });
     };
-} 
+}
 
 // BUSCAR LOS DATOS EN LA TABLA
 document.querySelector("#busqueda").onkeyup = function() {

@@ -15,16 +15,16 @@ body {
     border-radius: 30px;
 }
 
-.display-4{
+.display-4 {
     justify-content: center;
     text-align: center;
 }
 
-.container img{
-    max-width: 100px; /* Ajusta el ancho máximo de la imagen según tus necesidades */
+.container img {
+    max-width: 100%; /* Ajusta el ancho máximo de la imagen según tus necesidades */
     margin: 0 auto; /* Centra la imagen horizontalmente */
     display: block; /* Hace que la imagen sea un bloque y, por lo tanto, centrada */
-    margin-bottom: 20px; /* Espaciado inferior para separarla del texto */
+    margin-bottom: 5px; /* Espaciado inferior para separarla del texto */
 }
 
 /* Estilos para el botón "Agregar Datos" */
@@ -145,11 +145,11 @@ h2 {
     box-shadow: 0 0 5px rgba(0, 255, 13, 0.5);
 }
 
-.icon{
+.icon {
     color: #ffff;
 }
 
-.busqueda{
+.busqueda {
     margin-top: 10px;
 }
 
@@ -158,3 +158,4 @@ h2 {
 .table td:nth-child(10) {
     display: none;
 }
+

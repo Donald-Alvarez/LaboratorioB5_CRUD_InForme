@@ -13,6 +13,11 @@
     <link rel="icon" type="image/jpg" href="/img/upc.png"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
+    <!-- Agrega los enlaces a los archivos de DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
 </head>
 <body>
     <!-- Contenedor principal con Bootstrap -->
@@ -105,26 +110,27 @@
         </button>
         <input type="text" id="busqueda" class="busqueda form-control" placeholder="Buscar...">
         <div class="table-responsive">
-        <table class="table">
-            <thead class="table-dark">
-                <tr>
-                    <th>PC</th>
-                    <th>Procesador</th>
-                    <th>Memoria RAM</th>
-                    <th>Sistema Operativo</th>
-                    <th>Servidor</th>
-                    <th>Software Instalado</th>
-                    <th>Actualizaciones</th>
-                    <th>Usuarios</th>
-                    <th>Direccion IP</th>
-                    <th>Observaciones</th>
-                    <th>Acciones</th> <!-- Agrega una columna para las acciones -->
-                </tr>
-            </thead>
-            <tbody id="tablaDatos">
-                <!-- Los datos se agregarán aquí desde JavaScript -->
-            </tbody>
-        </table>
+            <table class=" table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>PC</th>
+                        <th>Procesador</th>
+                        <th>Memoria RAM</th>
+                        <th>Sistema Operativo</th>
+                        <th>Servidor</th>
+                        <th>Software Instalado</th>
+                        <th>Actualizaciones</th>
+                        <th>Usuarios</th>
+                        <th>Direccion IP</th>
+                        <th>Observaciones</th>
+                        <th>Acciones</th> <!-- Agrega una columna para las acciones -->
+                    </tr>
+                </thead>
+                <tbody id="tablaDatos">
+                    <!-- Los datos se agregarán aquí desde JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
     </div>
 
@@ -210,134 +216,149 @@
     
     <script>
         document.getElementById('generarInformeBtnFiltrado').addEventListener('click', function () {
-            var doc = new jsPDF();
-            var filasFiltradas = document.querySelectorAll('#tablaDatos tr');
-            var filasVisibles = Array.from(filasFiltradas).filter(function (fila) {
-                return fila.style.display !== 'none';
-            });
-        
-            // Verifica si hay filas filtradas
-            if (filasVisibles.length === 0) {
-                Swal.fire("Sin resultados", "No hay resultados para generar informes.", "info");
-                return;
+    var doc = new jsPDF();
+    var filasFiltradas = document.querySelectorAll('#tablaDatos tr');
+    var filasVisibles = Array.from(filasFiltradas).filter(function (fila) {
+        return fila.style.display !== 'none';
+    });
+
+    // Verifica si hay filas filtradas
+    if (filasVisibles.length === 0) {
+        Swal.fire("Sin resultados", "No hay resultados para generar informes.", "info");
+        return;
+    }
+
+    // Logo
+    var logo = new Image();
+    logo.src = './img/Logo.png';
+
+    logo.onload = function () {
+        var fontSize = 12;
+
+        for (var i = 0; i < filasVisibles.length; i++) {
+            if (i > 0) {
+                doc.addPage(); // Agregar una página nueva para cada PC
             }
-        
-            // Logo
-            var logo = new Image();
-            logo.src = './img/Logo.png';
-        
-            logo.onload = function () {
-                 var fontSize = 12;
-                    for (var i = 0; i < filasVisibles.length; i++) {
-                        if (i > 0) {
-                            doc.addPage(); // Agregar una página nueva para cada PC
-                        }
 
-                        // Configuración de tamaño de fuente y posición iniciales
-                        doc.setFontSize(fontSize);
-                        var yPosition = 20; // Reiniciar la posición en la nueva página
+            // Configuración de tamaño de fuente y posición iniciales
+            doc.setFontSize(fontSize);
+            var yPosition = 20; // Reiniciar la posición en la nueva página
 
-        
-                    var row = filasVisibles[i];
-                    var cells = row.getElementsByTagName('td');
-                    var pc = cells[0].textContent;
-                    var procesador = cells[1].textContent;
-                    var memoriaRAM = cells[2].textContent;
-                    var sistemaOperativo = cells[3].textContent;
-                    var servidor = cells[4].textContent;
-                    var softwareInstalado = cells[5].textContent;
-                    var direccionip = cells[8].textContent;
-                    var observacion = cells[9].textContent;
-        
-                    // Configuración de posición y estilo de los datos
-                    var yPosition = 20; // Reiniciar la posición en la nueva página
-                    var textStartX = 10;
-                    var textWidth = 85;
-                    var textX1 = textStartX;
-                    var textX2 = textStartX + textWidth;
-        
-                    // Agrega la fecha y la hora al documento
-                    var dateString = "Fecha: " + new Date().toLocaleDateString();
-                    var hours = new Date().getHours();
-                    var ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12;
-                    hours = hours ? hours : 12;
-                    var minutes = new Date().getMinutes();
-                    var timeString = "Hora: " + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm;
-        
-                    // Agrega el logo junto a la fecha y la hora
-                    doc.addImage(logo, 'PNG', 10,10, yPosition, 25, 30);
-                    doc.text(dateString, 170, yPosition + 5);
-                    doc.text(timeString, 170, yPosition + 10);
+            var row = filasVisibles[i];
+            var cells = row.getElementsByTagName('td');
+            var pc = cells[0].textContent;
+            var procesador = cells[1].textContent;
+            var memoriaRAM = cells[2].textContent;
+            var sistemaOperativo = cells[3].textContent;
+            var servidor = cells[4].textContent;
+            var softwareInstalado = cells[5].textContent;
+            var direccionip = cells[8].textContent;
+            var observacion = cells[9].textContent;
 
-                    yPosition += 40;
-                    doc.setFontType("bold");
-                    doc.text("Laboratorio B5", 10, yPosition, { align: "center" });
-                    yPosition += 10;
-                    doc.setFontType("normal")
-        
-                    // Agrega el título centrado
-                    yPosition += 10;
-                    doc.setFontType("bold");
-                    doc.text("Informe detallado de:", 10, yPosition, { align: "center" });
-                    yPosition += 10;
-                    doc.setFontType("normal")
-        
-                    // Agrega los datos de la PC con formato
-                    doc.setFontSize(12);
-                    doc.text("Nombre de la PC:", textX1, yPosition );
-                    doc.text(pc, textX2, yPosition, { maxWidth: textWidth });
-                    yPosition += 10;
-        
-                    doc.text("Procesador:", textX1, yPosition);
-                    doc.text(procesador, textX2, yPosition, { maxWidth: textWidth } );
-                    yPosition += 10;
-        
-                    doc.text("Memoria RAM:", textX1, yPosition);
-                    doc.text(memoriaRAM, textX2, yPosition, { maxWidth: textWidth });
-                    yPosition += 10;
-        
-                    doc.text("Sistema Operativo:", textX1, yPosition);
-                    doc.text(sistemaOperativo, textX2, yPosition, { maxWidth: textWidth });
-                    yPosition += 10;
-        
-                    doc.text("Servidor:", textX1, yPosition);
-                    doc.text(servidor, textX2, yPosition, { maxWidth: textWidth });
-                    yPosition += 10;
-        
-                    doc.text("Software Instalado:", textX1, yPosition);
-                    doc.text(softwareInstalado, textX2, yPosition, { maxWidth: textWidth });
-                    yPosition += 10;
-        
-                    doc.text("Dirección IP:", textX1, yPosition);
-                    var direccionip = doc.splitTextToSize(direccionip, textWidth);
-                    doc.text(direccionip, textX2, yPosition);
-                    yPosition += direccionip.length * 8;
-        
-                    doc.text("Observación:", textX1, yPosition);
-                    var observacionLines = doc.splitTextToSize(observacion, textWidth);
-                    doc.text(observacionLines, textX2, yPosition);
-                    yPosition += observacionLines.length * 10;
-                }
-        
-                // Guarda el PDF
-                doc.save("InformeEquiposFiltrado.pdf");
-        
-                // Muestra un SweetAlert con animación y un ícono de éxito
-                Swal.fire({
-                    title: "Informe generado con éxito",
-                    icon: "success",
-                    showClass: {
-                        popup: 'animate__animated animate__fadeIn'
-                    },
-                    hideClass: {
-                        popup: 'animate__animated animate__fadeOut'
-                    },
-                    timer: 2000, // Duración en milisegundos (2 segundos)
-                    showConfirmButton: false, // No mostrar el botón "OK"
-                });
-            };
+            if (i === 0) {
+                var pageWidth = doc.internal.pageSize.width;
+                var pageHeight = doc.internal.pageSize.height;
+                var logoWidth = 150;
+                var logoHeight = 30;
+                
+                var centerX = pageWidth / 2;
+                var centerY = pageHeight / 2;
+
+                // Centrar el logo en la parte superior
+                doc.addImage(logo, 'PNG', (pageWidth - logoWidth) / 2, 30, logoWidth, logoHeight);
+
+                // Título del Reporte
+                doc.setFontSize(16);
+                var title = "Título del Reporte";
+                var titleWidth = doc.getStringUnitWidth(title) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(title, centerX - titleWidth / 2, centerY - logoHeight - 30); // Ajusta la coordenada Y para subir el texto
+
+                // Fecha de Generación
+                var date = "Fecha de Generación: " + new Date().toLocaleDateString();
+                var dateWidth = doc.getStringUnitWidth(date) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(date, centerX - dateWidth / 2, centerY - logoHeight + 10); // Ajusta la coordenada Y para subir el texto
+
+                // Hora de Generación
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                var timeString = "Hora de Generación: " + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm;
+                var timeWidth = doc.getStringUnitWidth(timeString) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(timeString, centerX - timeWidth / 2, centerY - logoHeight + 30); // Ajusta la coordenada Y para subir el texto
+
+                // Usuario que realiza el reporte
+                var user = "Usuario que realiza el reporte: [Donald Alvarez]";
+                var userWidth = doc.getStringUnitWidth(user) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(user, centerX - userWidth / 2, centerY - logoHeight + 50); // Ajusta la coordenada Y para subir el texto
+
+                // Firma
+                doc.setFontSize(12);
+                var signature = "Firma: ______________________________________";
+                var signatureWidth = doc.getStringUnitWidth(signature) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(signature, centerX - signatureWidth / 2, centerY - logoHeight + 110); // Ajusta la coordenada Y para subir el texto
+
+                doc.addPage(); // Nueva página para el contenido del informe
+            }
+
+            // Resto del contenido del informe...
+            doc.setFontSize(12);
+            doc.text("Nombre de la PC:", 10, yPosition);
+            doc.text(pc, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Procesador:", 10, yPosition);
+            doc.text(procesador, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Memoria RAM:", 10, yPosition);
+            doc.text(memoriaRAM, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Sistema Operativo:", 10, yPosition);
+            doc.text(sistemaOperativo, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Servidor:", 10, yPosition);
+            doc.text(servidor, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Software Instalado:", 10, yPosition);
+            doc.text(softwareInstalado, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Dirección IP:", 10, yPosition);
+            var direccionipLines = doc.splitTextToSize(direccionip, 100);
+            doc.text(direccionipLines, 85, yPosition);
+            yPosition += direccionipLines.length * 10;
+
+            doc.text("Observación:", 10, yPosition);
+            var observacionLines = doc.splitTextToSize(observacion, 100);
+            doc.text(observacionLines, 85, yPosition);
+            yPosition += observacionLines.length * 10;
+        }
+
+        // Guarda el PDF
+        doc.save("InformeEquiposFiltrado.pdf");
+
+        // Muestra un SweetAlert con animación y un ícono de éxito
+        Swal.fire({
+            title: "Informe generado con éxito",
+            icon: "success",
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
+            timer: 2000, // Duración en milisegundos (2 segundos)
+            showConfirmButton: false, // No mostrar el botón "OK"
         });
-        </script>
+    };
+});
+
+    </script>
 </body>
 </html>
