@@ -3,6 +3,9 @@ firebase.initializeApp({
     apiKey: "AIzaSyDrLMma3AOYbDyiSw6pGUWbG-vrW7eEkSI",
     authDomain: "laboratoriob5v2.firebaseapp.com",
     projectId: "laboratoriob5v2",
+    storageBucket: "laboratoriob5v2.appspot.com",
+    messagingSenderId: "183463752152",
+    appId: "1:183463752152:web:c8450f9bb2c475bc2802ad"
 });
 
 // Inicializar Firestore
@@ -195,3 +198,5 @@ $filtro_tabla = function(id, value) {
         }
     }
 }
+
+

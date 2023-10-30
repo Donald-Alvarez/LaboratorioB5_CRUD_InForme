@@ -3,7 +3,7 @@
         padding: 10px;
     }
     .container img {
-        max-width: 80px;
+        max-width: 100%;
     }
     .btn-primary {
         padding: 8px 12px;

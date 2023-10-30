@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de equipos</title>
+    
+    <!-- Agrega los enlaces a los archivos CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/media.css">
+    <link rel="icon" type="image/jpg" href="/img/upc.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- Agrega los enlaces a los archivos de DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+</head>
+<body>
+    <!-- Contenedor principal con Bootstrap -->
+    <div class="container-oficial">
+    <div class="container mt-5 animate__animated animate__fadeIn">
+        <img src="img/Logo.png">
+        <h1 class="display-4">Laboratorio B5</h1>
+  
+    </div>
+
+    <!-- Modal para agregar datos -->
+    <div class="modal fade animate__fadeInUp" id="agregarDatosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Datos de PC</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de datos de PC -->
+                    <form id="formularioDatos">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="pc" class="form-label">Nombre de la PC</label>
+                                <input type="text" class="form-control" id="pc">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="procesador" class="form-label">Procesador</label>
+                                <input type="text" class="form-control" id="procesador">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="memoriaRAM" class="form-label">Cantidad de RAM</label>
+                                <input type="text" class="form-control" id="memoriaRAM">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sistemaOperativo" class="form-label">Sistema Operativo</label>
+                                <input type="text" class="form-control" id="sistemaOperativo">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="servidor" class="form-label">Servidor</label>
+                                <input type="text" class="form-control" id="servidor">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="softwareInstalado" class="form-label">Software Instalado</label>
+                                <input type="text" class="form-control" id="softwareInstalado">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="actualizaciones" class="form-label">Actualizaciones</label>
+                                <input type="text" class="form-control" id="actualizaciones" rows="3"></input>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="usuarios" class="form-label">Usuarios</label>
+                                <input type="text" class="form-control" id="usuarios">
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccionip" class="form-label">Direccion IP</label>
+                                <input type="text" class="form-control" id="direccionip">
+                            </div>
+                            <div class="mb-3">
+                                <label for="observacion" class="form-label">Hallazgos</label>
+                                <textarea class="form-control" id="observacion" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="guardarDatosBtn" data-bs-dismiss="modal" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla para mostrar datos -->
+    <div class="container mt-3"> 
+           
+        <h2>Datos de Equipos</h2>
+        <button type="button" class="btn btn-primary  " data-bs-toggle="modal" data-bs-target="#agregarDatosModal" >
+            Agregar Datos <i class="bi bi-plus-circle-fill"></i>
+        </button>
+        <button type="button" class="btn btn-success" id="generarInformeBtnFiltrado">
+            Generar informe <i class="bi bi-info-circle-fill"></i>
+
+        </button>
+        <input type="text" id="busqueda" class="busqueda form-control" placeholder="Buscar...">
+        <div class="table-responsive">
+            <table class=" table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>PC</th>
+                        <th>Procesador</th>
+                        <th>Memoria RAM</th>
+                        <th>Sistema Operativo</th>
+                        <th>Servidor</th>
+                        <th>Software Instalado</th>
+                        <th>Actualizaciones</th>
+                        <th>Usuarios</th>
+                        <th>Direccion IP</th>
+                        <th>Observaciones</th>
+                        <th>Acciones</th> <!-- Agrega una columna para las acciones -->
+                    </tr>
+                </thead>
+                <tbody id="tablaDatos">
+                    <!-- Los datos se agregarán aquí desde JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal para editar datos -->
+    <div class="modal fade" id="editarDatosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Datos de PC</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario de datos de PC para edición -->
+                    <form id="formularioEditarDatos">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="pc_editar" class="form-label">Nombre de la PC</label>
+                                <input type="text" class="form-control" id="pc_editar">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="procesador_editar" class="form-label">Procesador</label>
+                                <input type="text" class="form-control" id="procesador_editar">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="memoriaRAM_editar" class="form-label">Memoria RAM</label>
+                                <input type="text" class="form-control" id="memoriaRAM_editar">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sistemaOperativo_editar" class="form-label">Sistema Operativo</label>
+                                <input type="text" class="form-control" id="sistemaOperativo_editar">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="servidor_editar" class="form-label">Servidor</label>
+                                <input type="text" class="form-control" id="servidor_editar">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="softwareInstalado_editar" class="form-label">Software Instalado</label>
+                                <input type="text" class="form-control" id="softwareInstalado_editar">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="actualizaciones_editar" class="form-label">Actualizaciones</label>
+                                <input type="text" class="form-control" id="actualizaciones_editar" rows="3">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="usuarios_editar" class="form-label">Usuarios</label>
+                                <input type="text" class="form-control" id="usuarios_editar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccionip_editar" class="form-label">Direccion IP</label>
+                                <input type="text" class="form-control" id="direccionip_editar">
+                            </div>
+                            <div class="mb-3">
+                                <label for="observacion_editar" class="form-label">Hallazgos</label>
+                                <textarea class="form-control" id="observacion_editar" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="guardarEdicionBtn" data-bs-dismiss="modal" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Agrega los enlaces a los archivos JavaScript de Firebase, Firestore y Bootstrap -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.0/dist/sweetalert2.all.min.js"></script>
+    <script src="js/mi_script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+    
+    <script>
+      document.getElementById('generarInformeBtnFiltrado').addEventListener('click', function () {
+    var doc = new jsPDF();
+    var filasFiltradas = document.querySelectorAll('#tablaDatos tr');
+    var filasVisibles = Array.from(filasFiltradas).filter(function (fila) {
+        return fila.style.display !== 'none';
+    });
+
+    // Verifica si hay filas filtradas
+    if (filasVisibles.length === 0) {
+        Swal.fire("Sin resultados", "No hay resultados para generar informes.", "info");
+        return;
+    }
+
+    // Logo
+    var logo = new Image();
+    logo.src = './img/Logo.png';
+
+    logo.onload = function () {
+        var fontSize = 12;
+
+        for (var i = 0; i < filasVisibles.length; i++) {
+            if (i > 0) {
+                doc.addPage(); // Agregar una página nueva para cada PC
+            }
+
+            // Configuración de tamaño de fuente y posición iniciales
+            doc.setFontSize(fontSize);
+            var yPosition = 20; // Reiniciar la posición en la nueva página
+
+            var row = filasVisibles[i];
+            var cells = row.getElementsByTagName('td');
+            var pc = cells[0].textContent;
+            var procesador = cells[1].textContent;
+            var memoriaRAM = cells[2].textContent;
+            var sistemaOperativo = cells[3].textContent;
+            var servidor = cells[4].textContent;
+            var softwareInstalado = cells[5].textContent;
+            var direccionip = cells[8].textContent;
+            var observacion = cells[9].textContent;
+
+            var title;
+            if (document.querySelector("#busqueda").value.trim() === '') {
+                title = "Informe General de las PC";
+            } else {
+                title = "Informe de la:" + pc;
+            }
+
+            if (i === 0) {
+                var pageWidth = doc.internal.pageSize.width;
+                var pageHeight = doc.internal.pageSize.height;
+                var logoWidth = 150;
+                var logoHeight = 30;
+
+                var centerX = pageWidth / 2;
+                var centerY = pageHeight / 2;
+
+                // Centrar el logo en la parte superior
+                doc.addImage(logo, 'PNG', (pageWidth - logoWidth) / 2, 30, logoWidth, logoHeight);
+
+                // Título del Reporte
+                doc.setFontSize(16);
+
+                var titleWidth = doc.getStringUnitWidth(title) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(title, centerX - titleWidth / 2, centerY - logoHeight - 30); // Ajusta la coordenada Y para subir el texto
+
+                // Fecha de Generación
+                var date = "Fecha de Generación: " + new Date().toLocaleDateString();
+                var dateWidth = doc.getStringUnitWidth(date) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(date, centerX - dateWidth / 2, centerY - logoHeight + 10); // Ajusta la coordenada Y para subir el texto
+
+                // Hora de Generación
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                var timeString = "Hora de Generación: " + hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm;
+                var timeWidth = doc.getStringUnitWidth(timeString) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(timeString, centerX - timeWidth / 2, centerY - logoHeight + 30); // Ajusta la coordenada Y para subir el texto
+
+                // Usuario que realiza el reporte
+                var user = "Usuario que realiza el reporte: [Donald Alvarez]";
+                var userWidth = doc.getStringUnitWidth(user) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(user, centerX - userWidth / 2, centerY - logoHeight + 50); // Ajusta la coordenada Y para subir el texto
+
+                // Firma
+                doc.setFontSize(12);
+                var signature = "Firma: ______________________________________";
+                var signatureWidth = doc.getStringUnitWidth(signature) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                doc.text(signature, centerX - signatureWidth / 2, centerY - logoHeight + 110); // Ajusta la coordenada Y para subir el texto
+
+                doc.addPage(); // Nueva página para el contenido del informe
+            }
+
+            // Resto del contenido del informe...
+            doc.setFontSize(12);
+            doc.text("Nombre de la PC:", 10, yPosition);
+            doc.text(pc, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Procesador:", 10, yPosition);
+            doc.text(procesador, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Memoria RAM:", 10, yPosition);
+            doc.text(memoriaRAM, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Sistema Operativo:", 10, yPosition);
+            doc.text(sistemaOperativo, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Servidor:", 10, yPosition);
+            doc.text(servidor, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Software Instalado:", 10, yPosition);
+            doc.text(softwareInstalado, 85, yPosition);
+            yPosition += 10;
+
+            doc.text("Dirección IP:", 10, yPosition);
+            var direccionipLines = doc.splitTextToSize(direccionip, 100);
+            doc.text(direccionipLines, 85, yPosition);
+            yPosition += direccionipLines.length * 10;
+
+            doc.text("Hallazgo:", 10, yPosition);
+            var observacionLines = doc.splitTextToSize(observacion, 100);
+            doc.text(observacionLines, 85, yPosition);
+            yPosition += observacionLines.length * 10;
+        }
+
+        // Guarda el PDF
+        doc.save("InformeEquiposFiltrado.pdf");
+
+        // Muestra un SweetAlert con animación y un ícono de éxito
+        Swal.fire({
+            title: "Informe generado con éxito",
+            icon: "success",
+            showClass: {
+                popup: 'animate__animated animate__fadeIn'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOut'
+            },
+            timer: 2000, // Duración en milisegundos (2 segundos)
+            showConfirmButton: false, // No mostrar el botón "OK"
+        });
+    };
+});
+
+    </script>
+</body>
+</html>

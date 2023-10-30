@@ -21,6 +21,7 @@
 .login-logo {
     width: 100%;
     margin-bottom: 5px;
+
 }
 
 /* Estilos para los elementos del formulario */
@@ -66,12 +67,6 @@
         max-width: 100%;
         width: 90%;
         margin: 0 auto;
-    }
-
-    .login-logo {
-        width: 60%;
-        max-width: 150px;
-        margin-bottom: 10px;
     }
 
     .Registro-Text {
