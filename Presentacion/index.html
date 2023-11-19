@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    <link rel="stylesheet" href="/Presentacion/style/login.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="login-container">
+        <div class="box">
+            <img src="/Presentacion/img/Logo.png" alt="Logo" class="login-logo" />
+            <form id="loginForm">
+                <div class="login-form-group">
+                    <div class="input">
+                        <label for="email"></label>
+                        <input type="email" class="login-form-control" placeholder="Correo Electrónico" id="email" required>
+                    </div>
+                    <div class="login-form-group">
+                        <label for="password"></label>
+                        <input type="password" class="login-form-control" placeholder="Contraseña" id="password" required>
+                    </div>
+                </div>
+                <button type="button" id="loginButton" class="btn btn-primary">
+                    Iniciar Sesión
+                    <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Agrega la librería de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/Logica/js/auth.js"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginButton = document.getElementById("loginButton");
+            const spinner = document.getElementById("spinner");
+
+            function handleLogin() {
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+
+                // Validaciones
+                if (!email || !password) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Por favor, completa todos los campos.',
+                    });
+                    return;
+                }
+
+                // Mostrar el spinner
+                spinner.classList.remove("d-none");
+
+                // Deshabilitar el botón durante el proceso de inicio de sesión
+                loginButton.disabled = true;
+
+                // Autenticar con Firebase
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // El inicio de sesión fue exitoso, puedes redirigir o hacer lo que sea necesario
+                        console.log("Inicio de sesión exitoso", userCredential.user);
+                        window.location.href = "/presentacion/admin.html"; // Cambia esto con tu URL real
+                    })
+                    .catch((error) => {
+                        // Manejar errores de inicio de sesión
+                        console.error("Error de inicio de sesión", error.message);
+
+                        // Mostrar alerta de error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Credenciales inválidas',
+                            text: 'El correo electrónico o la contraseña proporcionados son incorrectos.',
+                        });
+
+                        // Ocultar el spinner
+                        spinner.classList.add("d-none");
+
+                        // Habilitar el botón nuevamente
+                        loginButton.disabled = false;
+                    });
+            }
+
+            // Agregar evento click al botón
+            loginButton.addEventListener("click", handleLogin);
+
+            // Agregar evento keypress al formulario
+            document.getElementById("loginForm").addEventListener("keypress", function (event) {
+                // Verificar si la tecla "Enter" fue presionada y no provino del botón
+                if (event.key === "Enter" && event.target !== loginButton) {
+                    handleLogin();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('/img/fondo.jpg') center/cover no-repeat;
+    background: url('/Presentacion/img/fondo.jpg') center/cover no-repeat;
 }
 
 /* Estilos para el "box" que contiene la imagen y el formulario */

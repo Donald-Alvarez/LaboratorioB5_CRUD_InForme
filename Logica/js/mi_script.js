@@ -21,47 +21,82 @@ function guardar() {
     var memoriaRAM = document.getElementById('memoriaRAM').value;
     var sistemaOperativo = document.getElementById('sistemaOperativo').value;
     var servidor = document.getElementById('servidor').value;
-    var softwareInstalado = document.getElementById('softwareInstalado').value;
     var actualizaciones = document.getElementById('actualizaciones').value;
     var usuarios = document.getElementById('usuarios').value;
-    var direccionip = document.getElementById('direccionip').value; // Obtener la dirección IP
 
-    db.collection("equipos").add({
-        pc: pc,
-        observacion: observacion,
-        procesador: procesador,
-        memoriaRAM: memoriaRAM,
-        sistemaOperativo: sistemaOperativo,
-        servidor: servidor,
-        softwareInstalado: softwareInstalado,
-        actualizaciones: actualizaciones,
-        usuarios: usuarios,
-        direccionip: direccionip // Agregar la dirección IP
-    })
-    .then(function (docRef) {
-        console.log("Document written with ID: ", docRef.id);
-        Swal.fire({
-            title: "Registro guardado",
-            icon: "success", // Ícono de éxito
-            timer: 2000, // Duración en milisegundos (2 segundos)
-            showConfirmButton: false // No mostrar el botón "OK"
+    // Obtener los valores de los cuatro octetos
+    var octeto1 = document.getElementById('octeto1').value;
+    var octeto2 = document.getElementById('octeto2').value;
+    var octeto3 = document.getElementById('octeto3').value;
+    var octeto4 = document.getElementById('octeto4').value;
+
+    // Unir los octetos para formar la dirección IP
+    var direccionip = octeto1 + '.' + octeto2 + '.' + octeto3 + '.' + octeto4;
+
+    // Obtener software instalado seleccionado
+    var checkboxes_seleccionados = document.querySelectorAll('input[name="software"]:checked');
+    var softwareInstalado = Array.from(checkboxes_seleccionados).map(checkbox => checkbox.value).join(", ");
+
+    // Verificar si el nombre de la PC ya existe en la tabla
+    var pcExistente = Array.from(document.querySelectorAll("#tablaDatos td:first-child"))
+        .map(cell => cell.textContent.trim())
+        .includes(pc);
+
+    if (pcExistente) {
+        // Muestra el mensaje de error si la PC ya existe
+        Swal.fire("Error", "El nombre de la PC ya existe. Por favor, elige otro nombre.", "error");
+    } else if (pc === '' || procesador === '' || memoriaRAM === '' || sistemaOperativo === '' || servidor === '' || actualizaciones === '' || usuarios === '' || direccionip === '') {
+        // Muestra el mensaje de error si hay campos vacíos
+        Swal.fire("Campos vacíos", "Por favor, completa todos los campos antes de guardar.", "warning");
+    } else {
+        // Agrega la PC si no hay errores
+        db.collection("equipos").add({
+            pc: pc,
+            observacion: observacion,
+            procesador: procesador,
+            memoriaRAM: memoriaRAM,
+            sistemaOperativo: sistemaOperativo,
+            servidor: servidor,
+            actualizaciones: actualizaciones,
+            usuarios: usuarios,
+            direccionip: direccionip,
+            softwareInstalado: softwareInstalado  // Agregar el softwareInstalado
+        })
+        .then(function (docRef) {
+            console.log("Document written with ID: ", docRef.id);
+
+            // Limpiar los campos del formulario
+            document.getElementById('formularioDatos').reset();
+
+            Swal.fire({
+                title: "Registro guardado",
+                icon: "success"
+            });
+        })
+        .catch(function (error) {
+            Swal.fire("Error", "Error al agregar documento: " + error, "error");
         });
-        document.getElementById('pc').value = '';
-        document.getElementById('observacion').value = '';
-        document.getElementById('procesador').value = '';
-        document.getElementById('memoriaRAM').value = '';
-        document.getElementById('sistemaOperativo').value = '';
-        document.getElementById('servidor').value = '';
-        document.getElementById('softwareInstalado').value = '';
-        document.getElementById('actualizaciones').value = '';
-        document.getElementById('usuarios').value = '';
-        document.getElementById('direccionip').value = '';
-    })
-    .catch(function (error) {
-        Swal.fire("Error", "Error al agregar documento: " + error, "error");
-    });
+    }
 }
 
+
+// Fucion validar nombre PC
+function validarNombrePC() {
+    var pc = document.getElementById('pc').value;
+
+    // Verificar si el nombre de la PC ya existe en la tabla
+    var pcExistente = Array.from(document.querySelectorAll("#tablaDatos td:first-child"))
+        .map(cell => cell.textContent.trim())
+        .includes(pc);
+
+    if (pcExistente) {
+        // Muestra el mensaje de error debajo del campo de entrada
+        document.getElementById('errorPc').innerText = "El nombre de la PC ya existe";
+    } else {
+        // Si no hay errores, limpia el mensaje de error
+        document.getElementById('errorPc').innerText = "";
+    }
+}
 // LEER LOS DATOS DE FIRESTORE
 var tablaDatos = document.getElementById('tablaDatos');
 db.collection("equipos")
@@ -69,8 +104,12 @@ db.collection("equipos")
     .onSnapshot((querySnapshot) => {
         tablaDatos.innerHTML = '';
         querySnapshot.forEach((doc) => {
+            // Determinamos si hay observaciones y aplicamos el color rojo si es el caso
+            var observacion = doc.data().observacion || '';
+            var claseEstilo = observacion.trim() !== '' ? 'table-danger' : '';
+
             tablaDatos.innerHTML += `
-            <tr>
+            <tr class="${claseEstilo}">
                 <td>${doc.data().pc}</td>
                 <td>${doc.data().procesador}</td>
                 <td>${doc.data().memoriaRAM}</td>
@@ -80,11 +119,11 @@ db.collection("equipos")
                 <td>${doc.data().actualizaciones}</td>
                 <td>${doc.data().usuarios}</td>
                 <td>${doc.data().direccionip}</td> 
-                <td>${doc.data().observacion}</td> 
+                <td>${observacion}</td> 
                 <td>
                     <button class="btn btn-danger" onclick="borrar('${doc.id}')"><i class="bi bi-trash3-fill"></i></button>
                     <button class="btn btn-warning" onclick="editar('${doc.id}', '${doc.data().pc}', 
-                    '${doc.data().observacion}', '${doc.data().procesador}', '${doc.data().memoriaRAM}',
+                    '${observacion}', '${doc.data().procesador}', '${doc.data().memoriaRAM}',
                      '${doc.data().sistemaOperativo}', '${doc.data().servidor}', '${doc.data().softwareInstalado}',
                       '${doc.data().actualizaciones}', '${doc.data().usuarios}', '${doc.data().direccionip}')"><i class="icon bi bi-pencil-square"></i></button>
                 </td>
@@ -117,7 +156,6 @@ function borrar(id) {
         }
     });
 }
-
 function editar(id, pc, observacion, procesador, memoriaRAM, sistemaOperativo, servidor, softwareInstalado, actualizaciones, usuarios, direccionip) {
     // Llenar los campos del formulario de edición con los datos actuales
     document.getElementById("pc_editar").value = pc;
@@ -126,10 +164,25 @@ function editar(id, pc, observacion, procesador, memoriaRAM, sistemaOperativo, s
     document.getElementById("memoriaRAM_editar").value = memoriaRAM;
     document.getElementById("sistemaOperativo_editar").value = sistemaOperativo;
     document.getElementById("servidor_editar").value = servidor;
-    document.getElementById("softwareInstalado_editar").value = softwareInstalado;
     document.getElementById("actualizaciones_editar").value = actualizaciones;
     document.getElementById("usuarios_editar").value = usuarios;
-    document.getElementById("direccionip_editar").value = direccionip; // Agregar la dirección IP
+
+    // Separar la dirección IP en octetos y llenar los campos correspondientes
+    var octetos = direccionip.split('.');
+    document.getElementById("octeto1_editar").value = octetos[0];
+    document.getElementById("octeto2_editar").value = octetos[1];
+    document.getElementById("octeto3_editar").value = octetos[2];
+    document.getElementById("octeto4_editar").value = octetos[3];
+
+    // Selección de opciones en los campos select y checkboxes del software instalado
+    document.getElementById("procesador_editar").value = procesador;
+    document.getElementById("sistemaOperativo_editar").value = sistemaOperativo;
+    document.getElementById("servidor_editar").value = servidor;
+
+    var checkboxes_editar = document.getElementsByName("software_editar");
+    checkboxes_editar.forEach(function (checkbox) {
+        checkbox.checked = softwareInstalado.includes(checkbox.value);
+    });
 
     // Abre el modal para editar
     var editarModal = new bootstrap.Modal(document.getElementById("editarDatosModal"));
@@ -137,17 +190,29 @@ function editar(id, pc, observacion, procesador, memoriaRAM, sistemaOperativo, s
 
     // Define la función para guardar los cambios
     document.getElementById("guardarEdicionBtn").onclick = function () {
+        // Obtener valores actualizados del formulario
         const pc_editar = document.getElementById("pc_editar").value;
         const observacion_editar = document.getElementById("observacion_editar").value;
         const procesador_editar = document.getElementById("procesador_editar").value;
         const memoriaRAM_editar = document.getElementById("memoriaRAM_editar").value;
         const sistemaOperativo_editar = document.getElementById("sistemaOperativo_editar").value;
         const servidor_editar = document.getElementById("servidor_editar").value;
-        const softwareInstalado_editar = document.getElementById("softwareInstalado_editar").value;
+
+        // Obtener software instalado seleccionado
+        const checkboxes_seleccionados = document.querySelectorAll('input[name="software_editar"]:checked');
+        const softwareInstalado_editar = Array.from(checkboxes_seleccionados).map(checkbox => checkbox.value).join(", ");
+
         const actualizaciones_editar = document.getElementById("actualizaciones_editar").value;
         const usuarios_editar = document.getElementById("usuarios_editar").value;
-        const direccionip_editar = document.getElementById("direccionip_editar").value; // Obtener la dirección IP editada
+        const octeto1_editar = document.getElementById("octeto1_editar").value;
+        const octeto2_editar = document.getElementById("octeto2_editar").value;
+        const octeto3_editar = document.getElementById("octeto3_editar").value;
+        const octeto4_editar = document.getElementById("octeto4_editar").value;
 
+        // Unir los octetos para formar la dirección IP
+        const direccionip_editar = `${octeto1_editar}.${octeto2_editar}.${octeto3_editar}.${octeto4_editar}`;
+
+        // Actualizar los datos en la base de datos
         var datosRef = db.collection("equipos").doc(id);
 
         datosRef.update({
@@ -160,7 +225,7 @@ function editar(id, pc, observacion, procesador, memoriaRAM, sistemaOperativo, s
             softwareInstalado: softwareInstalado_editar,
             actualizaciones: actualizaciones_editar,
             usuarios: usuarios_editar,
-            direccionip: direccionip_editar // Actualizar la dirección IP
+            direccionip: direccionip_editar
         })
             .then(function () {
                 editarModal.hide(); // Cierra el modal después de guardar
@@ -171,6 +236,7 @@ function editar(id, pc, observacion, procesador, memoriaRAM, sistemaOperativo, s
             });
     };
 }
+
 
 // BUSCAR LOS DATOS EN LA TABLA
 document.querySelector("#busqueda").onkeyup = function() {
@@ -198,5 +264,30 @@ $filtro_tabla = function(id, value) {
         }
     }
 }
+//Campo del software seleccionado 
+function actualizarSoftwareInstalado(checkbox) {
+    var softwareInstalado = document.getElementById("softwareInstalado");
+
+    if (checkbox.checked) {
+        // Agregar el valor del checkbox al campo de texto
+        softwareInstalado.value += checkbox.value + ', ';
+    } else {
+        // Eliminar el valor del checkbox del campo de texto
+        softwareInstalado.value = softwareInstalado.value.replace(checkbox.value + ', ', '');
+    }
+}
+ //Campo de Direccion IP
+function validarEntrada(input) {
+    // Eliminar caracteres no numéricos
+    input.value = input.value.replace(/[^0-9]/g, '');
+
+    // Validar la longitud máxima
+    if (input.value.length > input.maxLength) {
+        input.value = input.value.slice(0, input.maxLength);
+    }
+}
+
+
+
 
 

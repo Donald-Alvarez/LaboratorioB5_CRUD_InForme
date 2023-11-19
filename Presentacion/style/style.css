@@ -4,6 +4,22 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.btn-cerrar-sesion {
+    background-color: #dc3545;
+    margin-left: 80%;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn-cerrar-sesion:hover {
+    background-color: #c82333;
+}
+
 .container-oficial {
     max-width: 1200px;
     margin: 0 auto;
@@ -16,15 +32,14 @@ body {
 }
 
 .display-4 {
-    justify-content: center;
     text-align: center;
 }
 
 .container img {
-    max-width: 100%; /* Ajusta el ancho máximo de la imagen según tus necesidades */
-    margin: 0 auto; /* Centra la imagen horizontalmente */
-    display: block; /* Hace que la imagen sea un bloque y, por lo tanto, centrada */
-    margin-bottom: 5px; /* Espaciado inferior para separarla del texto */
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 5px;
 }
 
 /* Estilos para el botón "Agregar Datos" */
@@ -105,13 +120,11 @@ h2 {
     font-size: 1rem;
     border: none;
     border-radius: 5px;
-    align-items: center;
 }
 
 .modal-footer button.primary {
     background-color: #007bff;
     color: #fff;
-    justify-content: center;
 }
 
 .modal-footer button.primary:hover {
@@ -131,11 +144,11 @@ h2 {
 .modal-body input[type="text"],
 .modal-body textarea {
     width: 100%;
-    padding: 5px;
+    padding: 8px;
     border: 1px solid #ccc;
-    border-radius: 3; /* Borra el borde redondeado */
-    background-color: transparent; /* Fondo transparente */
-    box-shadow: none; /* Sin sombra */
+    border-radius: 5px;
+    background-color: transparent;
+    box-shadow: none;
 }
 
 /* Estilos para resaltar el input enfocado */
@@ -144,6 +157,13 @@ h2 {
     border-color: #057414;
     box-shadow: 0 0 5px rgba(0, 255, 13, 0.5);
 }
+
+.modal-body input:focus,
+.modal-body select:focus {
+    border-color: #057414;
+    box-shadow: 0 0 5px rgba(0, 255, 13, 0.5);
+}
+
 
 .icon {
     color: #ffff;
@@ -158,4 +178,26 @@ h2 {
 .table td:nth-child(10) {
     display: none;
 }
+.ip-input {
+    display: flex;
+    align-items: center;
+}
 
+.ip-input .octeto {
+    flex: 1;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.ip-input .punto {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+@media (max-width: 767px) {
+    .form-select {
+        font-size: 14px; /* Tamaño de fuente más pequeño para dispositivos móviles */
+        padding: 10px; /* Ajuste de padding */
+        /* Otros estilos específicos para dispositivos móviles aquí */
+    }
+}
